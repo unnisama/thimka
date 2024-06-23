@@ -1,3 +1,3 @@
 # Hello
 
-![Demo](https://github.com/unnisama/thimka/blob/demo/1.png?raw=true)
+![Demo](https://raw.githubusercontent.com/unnisama/thimka/main/demos/1.png)
