@@ -104,9 +104,9 @@ int main(void)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-		GLDEBUGCALL(glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_INT, nullptr));
-		gui.NewFrame();
-		gui.DrawFrame();
+        GLDEBUGCALL(glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_INT, nullptr));
+        gui.NewFrame();
+        gui.DrawFrame();
         game.HandleBufferAndEvent();
     }
 	shader.Delete();
