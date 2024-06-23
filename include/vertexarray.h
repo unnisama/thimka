@@ -13,7 +13,7 @@ struct VertexArrayLayout
 class ArrayLayout{
 
 private:
-    size_t m_stride;
+    size_t m_stride = 0;
     std::vector<VertexArrayLayout> layout;
 public:
     void AddFloat(GLuint count);

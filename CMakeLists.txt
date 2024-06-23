@@ -6,6 +6,7 @@ set(
     SRC
     src/main.cpp
     "include/renderer.h"
+    src/vertexarray.cpp
     src/vertexbuffer.cpp
     src/indexbuffer.cpp
     src/renderer.cpp

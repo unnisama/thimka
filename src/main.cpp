@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "vertexbuffer.h"
 #include "indexbuffer.h"
+#include "vertexarray.h"
 
 int WIDTH = 640;
 int HEIGHT = 480;
@@ -77,16 +78,18 @@ int main(void)
 		2,3,0
 	};
 
-	unsigned int vao;
-	GLDEBUGCALL(glGenVertexArrays(1, &vao));
-	GLDEBUGCALL(glBindVertexArray(vao));
-
+	
 	VertexBuffer vb(positions, sizeof(float)*8);
 
+	
+
+	ArrayLayout aly;
+	aly.AddFloat(2);
+
+	VertexArray va(&vb, &aly);
 	IndexBuffer ib(indexes, 6);
 
-	GLDEBUGCALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, 0));
-	GLDEBUGCALL(glEnableVertexAttribArray(0));
+	va.Enable();
 
 	
 	Shader shader("../shaders/fragment.glsl", "../shaders/vertex.glsl");
@@ -99,10 +102,9 @@ int main(void)
 
     while (!game.ShouldClose())
     {
-		glClearColor(color[0],color[1],color[2], 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-		//GLDEBUGCALL(glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_INT, nullptr));
+		GLDEBUGCALL(glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_INT, nullptr));
 		gui.NewFrame();
 		gui.DrawFrame();
         game.HandleBufferAndEvent();
@@ -110,7 +112,6 @@ int main(void)
 	shader.Delete();
 	vb.UnBind();
 	ib.UnBind();
-	glDeleteVertexArrays(1, &vao);
 
     return 0;
 }
