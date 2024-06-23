@@ -81,8 +81,6 @@ int main(void)
 	
 	VertexBuffer vb(positions, sizeof(float)*8);
 
-	
-
 	ArrayLayout aly;
 	aly.AddFloat(2);
 
@@ -90,7 +88,6 @@ int main(void)
 	IndexBuffer ib(indexes, 6);
 
 	va.Enable();
-
 	
 	Shader shader("../shaders/fragment.glsl", "../shaders/vertex.glsl");
 
