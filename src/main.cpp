@@ -15,70 +15,12 @@
 int WIDTH = 640;
 int HEIGHT = 480;
 
-std::string GLErrorToString(GLenum err)
-{
-	switch (err)
-	{
-	case GL_NO_ERROR:
-		return "GL_NO_ERROR";
-	case GL_INVALID_ENUM:
-		return "GL_INVALID_ENUM";
-	case GL_INVALID_VALUE:
-		return "GL_INVALID_VALUE";
-	case GL_INVALID_OPERATION:
-		return "GL_INVALID_OPERATION";
-	case GL_STACK_OVERFLOW:
-		return "GL_STACK_OVERFLOW";
-	case GL_STACK_UNDERFLOW:
-		return "GL_STACK_UNDERFLOW";
-	case GL_OUT_OF_MEMORY:
-		return "GL_OUT_OF_MEMORY";
-	case 0x8031: /* not core */
-		return "GL_TABLE_TOO_LARGE_EXT";
-	case 0x8065: /* not core */
-		return "GL_TEXTURE_TOO_LARGE_EXT";
-	case GL_INVALID_FRAMEBUFFER_OPERATION:
-		return "GL_INVALID_FRAMEBUFFER_OPERATION";
-	default:
 
-		char dat[100];
-
-		sprintf(dat, "%d", err);
-
-		std::string ret = dat;
-		return ret;
-	}
-}
-
-const char *severitytostring(GLenum severity)
-{
-
-	switch (severity)
-	{
-	case GL_DEBUG_SEVERITY_HIGH:
-		return "High";
-	case GL_DEBUG_SEVERITY_MEDIUM:
-		return "Medium";
-	case GL_DEBUG_SEVERITY_LOW:
-		return "Low";
-	case GL_DEBUG_SEVERITY_NOTIFICATION:
-		return "Notification";
-	default:
-		return "Unknown Enum";
-	}
-}
-
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
-{
-	const char *s = severitytostring(severity);
-
-	std::cout << "[OpenGL (" << s << ")](" << GLErrorToString(type) << ") " << message << std::endl;
-}
 
 int main(void)
 {
 	Game game(WIDTH, HEIGHT, "Start");
-	game.SetDebug(MessageCallback);
+	game.EnableDebug();
 
 	Gui gui(game.GetWindow());
 
@@ -130,18 +72,20 @@ int main(void)
 		gui.NewFrame();
 
 		ImGui::SetNextWindowPos({0,0});
+		ImGui::SetNextWindowSize({-1,110});
 		ImGui::Begin("Setting", &menuopen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
 		if(ImGui::SliderFloat("Freq", &freq, 0.0f, 3.0f)){
 			glUniform1f(freqid, freq);
 		}
-		ImGui::Text("Time: %f", timer.GetTime());
-		ImGui::Text("DT: %f", dt);
+		ImGui::Text("UpTime: %.3f", game.GetTime());
+		ImGui::Text("FrameTime: %.3f", dt);
+		ImGui::Text("FPS: %.3f", 1.0f/dt);
 
 		ImGui::End();
-		dt = timer.Step();
+		
 		gui.DrawFrame();
 		game.HandleBufferAndEvent();
-		
+		dt = game.Step();
 	}
 	shader.Delete();
 	vb.UnBind();

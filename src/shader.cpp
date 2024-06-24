@@ -85,6 +85,9 @@ GLuint Shader::GetUniformLocation(const GLchar *name)
 {
     GLuint ret;
     GLDEBUGCALL(ret = glGetUniformLocation(program, name));
+    if (ret == -1){
+        printf("[Uniform Error] %s doesn't exist\n", name);
+    }
     return ret;
 }
 
