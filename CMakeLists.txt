@@ -13,6 +13,9 @@ set(
     src/Game.cpp
     src/shader.cpp
     src/Gui.cpp
+    src/timer.cpp
+
+#   ImGui
     vendor/imgui/src/imgui.cpp
     vendor/imgui/src/imgui_demo.cpp
     vendor/imgui/src/imgui_draw.cpp

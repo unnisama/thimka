@@ -16,6 +16,7 @@ public:
     Shader(const char *fragpath, const char *vertpath);
     void Delete();
     bool LogError();
+    GLuint GetUniformLocation(const GLchar *name);
     ~Shader();
 
     static std::string readFile(const char *path);

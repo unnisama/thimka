@@ -37,7 +37,7 @@ void Shader::Delete()
     if (status)
     {
         status = false;
-        glDeleteProgram(program);
+        GLDEBUGCALL(glDeleteProgram(program));
     }
 }
 
@@ -81,11 +81,18 @@ bool Shader::LogError()
     return status;
 }
 
+GLuint Shader::GetUniformLocation(const GLchar *name)
+{
+    GLuint ret;
+    GLDEBUGCALL(ret = glGetUniformLocation(program, name));
+    return ret;
+}
+
 Shader::~Shader()
 {
     if (status)
     {
-        glDeleteProgram(program);
+        GLDEBUGCALL(glDeleteProgram(program));
     }
 }
 
@@ -121,5 +128,5 @@ bool Shader::GetStatus()
 
 void Shader::Use()
 {
-    glUseProgram(program);
+    GLDEBUGCALL(glUseProgram(program));
 }
