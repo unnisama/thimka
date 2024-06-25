@@ -11,6 +11,7 @@
 #include "indexbuffer.h"
 #include "vertexarray.h"
 #include "timer.h"
+#include "renderer.h"
 
 int WIDTH = 640;
 int HEIGHT = 480;
@@ -20,21 +21,22 @@ int HEIGHT = 480;
 int main(void)
 {
 	Game game(WIDTH, HEIGHT, "Start");
-	game.EnableDebug();
+	// game.EnableDebug();
 
-	Gui gui(game.GetWindow());
+	Gui gui(game.GetWindow(), &game);
 
-	Timer timer;
-
+	Renderer renderer;
 	float positions[8] = {
 		0.5f, 0.5f,
 		-0.5f, 0.5f,
 		-0.5f, -0.5f,
-		0.5f, -0.5f};
+		0.5f, -0.5f
+	};
 
 	uint32_t indexes[6] = {
 		0, 1, 2,
-		2, 3, 0};
+		2, 3, 0
+	};
 
 	VertexBuffer vb(positions, sizeof(float) * 8);
 
@@ -48,48 +50,49 @@ int main(void)
 
 	Shader shader("../shaders/fragment.glsl", "../shaders/vertex.glsl");
 
-	GLuint deltatime = shader.GetUniformLocation("dt");
-	GLuint time_ = shader.GetUniformLocation("time");
-	GLuint freqid = shader.GetUniformLocation("freq");
 	shader.Use();
 
-	float color[3] = {};
+	
+	GLuint time_ = shader.GetUniformLocation("time");
+	GLuint freqid = shader.GetUniformLocation("freq");
+	
+
+	
+	GLuint deltatime_ = shader.GetUniformLocation("deltatime");
 
 	bool menuopen = true;
 
 	float freq = 1.0f;
-	glUniform1f(freqid, freq);
+	GLDEBUGCALL(glUniform1f(freqid, freq));
 
-    float dt = timer.Step();
+    float dt = game.Step();
 	while (!game.ShouldClose())
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-		GLDEBUGCALL(glDrawElements(GL_LINE_STRIP, 6, GL_UNSIGNED_INT, nullptr));
+		GLDEBUGCALL(glUniform1f(deltatime_, dt));
+		GLDEBUGCALL(glUniform1f(time_, game.GetTime()));
 
-		glUniform1f(deltatime, dt);
-		glUniform1f(time_, timer.GetTime());
+		renderer.Draw(va, ib, shader);
+
 		gui.NewFrame();
 
 		ImGui::SetNextWindowPos({0,0});
 		ImGui::SetNextWindowSize({-1,110});
-		ImGui::Begin("Setting", &menuopen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
-		if(ImGui::SliderFloat("Freq", &freq, 0.0f, 3.0f)){
-			glUniform1f(freqid, freq);
+		ImGui::Begin("Setting", &menuopen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+		if(ImGui::SliderFloat("Freq", &freq, 0.5f, 6.0f)){
+			GLDEBUGCALL(glUniform1f(freqid, freq));
 		}
 		ImGui::Text("UpTime: %.3f", game.GetTime());
-		ImGui::Text("FrameTime: %.3f", dt);
-		ImGui::Text("FPS: %.3f", 1.0f/dt);
+		ImGui::Text("FTime: %.3f", dt);
+		ImGui::Text("FPS: %.f", 1.0f/dt);
 
 		ImGui::End();
 		
-		gui.DrawFrame();
+		gui.EndFrame();
 		game.HandleBufferAndEvent();
 		dt = game.Step();
 	}
-	shader.Delete();
-	vb.UnBind();
-	ib.UnBind();
 
 	return 0;
 }

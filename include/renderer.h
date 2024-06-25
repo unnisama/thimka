@@ -2,12 +2,12 @@
 #include <GL/glew.h>
 #include <stdio.h>
 #include <iostream>
+#include "indexbuffer.h"
+#include "vertexbuffer.h"
+#include "vertexarray.h"
+#include "shader.h"
 
-#define GLDEBUGCALL(f) glClearError();\
-    f;\
-    glLogError(#f, __FILE__, __LINE__)
-
-void glClearError();
-void glLogError(const char *func, const char* file, int line);
-
-
+class Renderer{
+public:
+    void Draw(VertexArray &va, IndexBuffer& ib, Shader& shader);
+};

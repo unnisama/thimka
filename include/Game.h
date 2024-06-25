@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include "timer.h"
+#include <string>
+#include <iostream>
 
 class Game
 {

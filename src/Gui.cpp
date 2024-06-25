@@ -1,6 +1,6 @@
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow *window)
+Gui::Gui(GLFWwindow *window, Game *game)
 {
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
@@ -11,6 +11,7 @@ Gui::Gui(GLFWwindow *window)
     font = io->Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/JetBrainsMono-Medium.ttf", 16.0f);
     ImGui::GetStyle().FrameRounding = 5.0f;
     ImGui::GetStyle().WindowRounding = 5.0f;
+    this->game = game;
 
 }
 
@@ -21,17 +22,17 @@ void Gui::NewFrame()
     ImGui::NewFrame();
 }
 
-void Gui::DrawFrame()
+void Gui::EndFrame()
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+
 ImGuiIO *Gui::GetIO()
 {
     return io;
 }
-
 Gui::~Gui()
 {
     ImGui_ImplOpenGL3_Shutdown();

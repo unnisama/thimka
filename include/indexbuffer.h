@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer.h"
+#include "debug.h"
 
 class IndexBuffer
 {
@@ -14,6 +14,8 @@ public:
     void Bind() const;
 
     void UnBind() const;
+
+    uint32_t GetCount() const;
 
     uint32_t GetID() const;
 };

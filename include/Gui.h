@@ -3,6 +3,7 @@
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "Game.h"
 
 class Gui
 {
@@ -10,11 +11,12 @@ class Gui
 private:
     ImGuiIO *io;
     ImFont *font;
+    Game *game;
 
 public:
-    Gui(GLFWwindow *window);
+    Gui(GLFWwindow *window, Game *game);
     void NewFrame();
-    void DrawFrame();
+    void EndFrame();
     ImGuiIO *GetIO();
     ~Gui();
 };

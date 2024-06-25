@@ -23,6 +23,11 @@ void IndexBuffer::UnBind() const
     GLDEBUGCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
+uint32_t IndexBuffer::GetCount() const
+{
+    return count;
+}
+
 uint32_t IndexBuffer::GetID() const
 {
     return m_ID;

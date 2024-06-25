@@ -5,7 +5,6 @@ project(opeglsa)
 set(
     SRC
     src/main.cpp
-    "include/renderer.h"
     src/vertexarray.cpp
     src/vertexbuffer.cpp
     src/indexbuffer.cpp
@@ -14,6 +13,8 @@ set(
     src/shader.cpp
     src/Gui.cpp
     src/timer.cpp
+    src/debug.cpp
+    vendor/stb/src/stb_image.cpp
 
 #   ImGui
     vendor/imgui/src/imgui.cpp
@@ -51,4 +52,5 @@ target_include_directories(
     ${PROJECT_NAME}
     PRIVATE ${CPP_INCLUDE_PATH}
     PRIVATE vendor/imgui/include
+    PRIVATE vendor/stb/include
 )

@@ -1,6 +1,7 @@
 #version 330
 layout (location = 0) in vec3 aPos;
-uniform float dt;
+
+uniform float deltatime;
 uniform float time;
 uniform float freq;
 

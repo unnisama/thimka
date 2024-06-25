@@ -83,12 +83,33 @@ bool Shader::LogError()
 
 GLuint Shader::GetUniformLocation(const GLchar *name)
 {
-    GLuint ret;
+    auto it = uniformStored.find(name);
+    if(it != uniformStored.end()){
+        return it->second;
+    }
+
+    int ret;
     GLDEBUGCALL(ret = glGetUniformLocation(program, name));
     if (ret == -1){
         printf("[Uniform Error] %s doesn't exist\n", name);
     }
+    uniformStored[name] = ret;
     return ret;
+}
+
+void Shader::SetUniform1f(const GLchar *name, float v)
+{
+    GLDEBUGCALL(glUniform1f(GetUniformLocation(name), v));
+}
+
+void Shader::SetUniform4f(const GLchar *name, float v0, float v1, float v2, float v3)
+{
+    GLDEBUGCALL(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+}
+
+void Shader::SetUniform1i(const GLchar *name, int v)
+{
+     GLDEBUGCALL(glUniform1i(GetUniformLocation(name), v));
 }
 
 Shader::~Shader()

@@ -1,13 +1,8 @@
 #include <renderer.h>
 
-void glClearError(){
-    while(GLenum err = glGetError()){
-    }
-}
-
-void glLogError(const char *func, const char* file, int line){
-    while(GLenum err = glGetError()){
-        printf("%s:%d %s\n", file, line, func);
-        printf("    [OpenGL Error] (%d)\n", err);
-    }
+void Renderer::Draw(VertexArray &va, IndexBuffer &ib, Shader &shader)
+{
+    va.Bind();
+    ib.Bind();
+    GLDEBUGCALL(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
