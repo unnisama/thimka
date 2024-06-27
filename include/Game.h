@@ -6,13 +6,11 @@
 #include "timer.h"
 #include <string>
 #include <iostream>
+#include "callbackevents.h"
 
 class Game
 {
 private:
-    int WIDTH;
-    int HEIGHT;
-    GLFWwindow *window;
     Timer timer;
 
 public:
@@ -22,8 +20,15 @@ public:
     void EnableDebug();
     float Step();
     float GetTime();
-    GLFWwindow *GetWindow();
+    void ResizeCallBack(int width, int height);
+    inline static GLFWwindow *GetWindow() { return window; };
+    inline int GetWIDTH() const { return WIDTH; };
+    inline int GetHEIGHT() const { return HEIGHT; };
 
     ~Game();
+public:
+    static int WIDTH;
+    static int HEIGHT;
+    static GLFWwindow *window;
 };
 

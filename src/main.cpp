@@ -1,6 +1,7 @@
 #include "vertexbuffer.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "glm/gtc/matrix_transform.hpp"
 #include <stdio.h>
 #include "Game.h"
 #include <iostream>
@@ -12,87 +13,125 @@
 #include "vertexarray.h"
 #include "timer.h"
 #include "renderer.h"
+#include "texture.h"
+#include <iomanip>
+#include "camera.h"
 
 int WIDTH = 640;
 int HEIGHT = 480;
 
-
+void printMat4(const glm::mat4 &mat)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            std::cout << std::fixed << std::setprecision(2) << mat[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
 
 int main(void)
 {
-	Game game(WIDTH, HEIGHT, "Start");
-	// game.EnableDebug();
+    Game game(WIDTH, HEIGHT, "Start");
+    game.EnableDebug();
 
-	Gui gui(game.GetWindow(), &game);
+    Gui gui(game.GetWindow(), &game);
 
-	Renderer renderer;
-	float positions[8] = {
-		0.5f, 0.5f,
-		-0.5f, 0.5f,
-		-0.5f, -0.5f,
-		0.5f, -0.5f
-	};
+    
 
-	uint32_t indexes[6] = {
-		0, 1, 2,
-		2, 3, 0
-	};
+    Renderer renderer;
+    float positions[16] = {
+        0.5f,
+        0.5f,
+        1.0f,
+        1.0f,
+        -0.5f,
+        0.5f,
+        0.0f,
+        1.0f,
+        -0.5f,
+        -0.5f,
+        0.0f,
+        0.0f,
+        0.5f,
+        -0.5f,
+        1.0f,
+        0.0f,
+    };
 
-	VertexBuffer vb(positions, sizeof(float) * 8);
+    uint32_t indexes[6] = {
+        0, 1, 2,
+        2, 3, 0};
 
-	ArrayLayout aly;
-	aly.AddFloat(2);
+    VertexBuffer vb(positions, sizeof(float) * 4 * 4, GL_STREAM_DRAW);
 
-	VertexArray va(&vb, &aly);
-	IndexBuffer ib(indexes, 6);
+    ArrayLayout aly;
+    aly.AddFloat(2);
+    aly.AddFloat(2);
 
-	va.Enable();
+    VertexArray va(&vb, &aly);
+    IndexBuffer ib(indexes, 6);
+    Texture texture("../assets/textures/oak.png");
+    texture.Bind(0);
 
-	Shader shader("../shaders/fragment.glsl", "../shaders/vertex.glsl");
+    va.Enable();
 
-	shader.Use();
+    Shader shader("../assets/shaders/fragment.glsl", "../assets/shaders/vertex.glsl");
 
-	
-	GLuint time_ = shader.GetUniformLocation("time");
-	GLuint freqid = shader.GetUniformLocation("freq");
-	
+    shader.Use();
 
-	
-	GLuint deltatime_ = shader.GetUniformLocation("deltatime");
+    Camera camera(WIDTH, HEIGHT, &shader);
 
-	bool menuopen = true;
+    camera.SetUniforms();
 
-	float freq = 1.0f;
-	GLDEBUGCALL(glUniform1f(freqid, freq));
+    GLuint time_ = shader.GetUniformLocation("time");
+    GLuint freqid = shader.GetUniformLocation("freq");
+    shader.SetUniform1i("u_texture", 0);
+
+    GLuint deltatime_ = shader.GetUniformLocation("deltatime");
+
+    bool menuopen = true;
+
+    float freq = 1.0f;
+    GLDEBUGCALL(glUniform1f(freqid, freq));
 
     float dt = game.Step();
-	while (!game.ShouldClose())
-	{
-		GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-		GLDEBUGCALL(glUniform1f(deltatime_, dt));
-		GLDEBUGCALL(glUniform1f(time_, game.GetTime()));
+    auto t = glm::vec3(0.0f, 0.0f, 0.0f);
 
-		renderer.Draw(va, ib, shader);
+        while (!game.ShouldClose())
+    {
+        GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-		gui.NewFrame();
+        GLDEBUGCALL(glUniform1f(deltatime_, dt));
+        GLDEBUGCALL(glUniform1f(time_, game.GetTime()));
 
-		ImGui::SetNextWindowPos({0,0});
-		ImGui::SetNextWindowSize({-1,110});
-		ImGui::Begin("Setting", &menuopen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-		if(ImGui::SliderFloat("Freq", &freq, 0.5f, 6.0f)){
-			GLDEBUGCALL(glUniform1f(freqid, freq));
-		}
-		ImGui::Text("UpTime: %.3f", game.GetTime());
-		ImGui::Text("FTime: %.3f", dt);
-		ImGui::Text("FPS: %.f", 1.0f/dt);
+        renderer.Draw(va, ib, shader);
 
-		ImGui::End();
-		
-		gui.EndFrame();
-		game.HandleBufferAndEvent();
-		dt = game.Step();
-	}
+        gui.NewFrame();
 
-	return 0;
+        ImGui::SetNextWindowPos({0, 0});
+        ImGui::SetNextWindowSize({-1, -1});
+        ImGui::Begin("Setting", &menuopen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+        if (ImGui::SliderFloat("Freq", &freq, 0.0f, 6.0f))
+        {
+            GLDEBUGCALL(glUniform1f(freqid, freq));
+        }
+
+        ImGui::Text("UpTime: %.3f", game.GetTime());
+        ImGui::Text("FTime: %.3f", dt);
+        ImGui::Text("FPS: %.f", 1.0f / dt);
+
+        camera.Inputs(Game::GetWindow());
+
+        ImGui::End();
+
+        gui.EndFrame();
+        game.HandleBufferAndEvent();
+        dt = game.Step();
+    }
+
+    return 0;
 }

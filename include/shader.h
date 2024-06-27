@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 class Shader{
@@ -22,6 +24,7 @@ public:
     GLuint GetUniformLocation(const GLchar *name);
     void SetUniform1f(const GLchar *name, float v);
     void SetUniform4f(const GLchar *name, float v0, float v1, float v2, float v3);
+    void SetMat4f(const GLchar *name, glm::mat4& m4);
     void SetUniform1i(const GLchar *name, int v);
     ~Shader();
 

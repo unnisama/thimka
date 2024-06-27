@@ -14,6 +14,11 @@ set(
     src/Gui.cpp
     src/timer.cpp
     src/debug.cpp
+    src/texture.cpp
+    src/camera.cpp
+    src/callbackevents.cpp
+
+#   stb
     vendor/stb/src/stb_image.cpp
 
 #   ImGui

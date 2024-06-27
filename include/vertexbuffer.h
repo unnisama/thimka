@@ -8,7 +8,7 @@ private:
     size_t size;
 
 public:
-    VertexBuffer(void *data, size_t size);
+    VertexBuffer(void *data, size_t size, GLenum usage);
     ~VertexBuffer();
 
     void Bind() const;

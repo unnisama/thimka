@@ -53,6 +53,7 @@ const char *severitytostring(GLenum severity)
 	}
 }
 
+
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 {
 	const char *s = severitytostring(severity);
@@ -60,7 +61,12 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	std::cout << "[OpenGL (" << s << ")](" << GLErrorToString(type) << ") " << message << std::endl;
 }
 
-Game::Game(int WIDTH, int HEIGHT, const char *title) : timer()
+int Game::WIDTH = 1;
+int Game::HEIGHT = 1;
+GLFWwindow* Game::window;
+
+
+Game::Game(int width, int height, const char *title) : timer()
 {
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -72,7 +78,8 @@ Game::Game(int WIDTH, int HEIGHT, const char *title) : timer()
         return;
     }
         
-
+    Game::HEIGHT = height;
+    Game::WIDTH = width;
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(WIDTH, HEIGHT, title, NULL, NULL);
     if (!window)
@@ -90,10 +97,14 @@ Game::Game(int WIDTH, int HEIGHT, const char *title) : timer()
     // vsync
     glfwSwapInterval(1);
 
-    this->HEIGHT = HEIGHT;
-    this->WIDTH = WIDTH;
 
-    glViewport(0, 0, WIDTH, HEIGHT);
+	glfwSetWindowSizeCallback(window, WindowResizeCallBack);
+
+	AddResizeCallback([this](int width, int height){
+        this->ResizeCallBack(width, height);
+    });
+
+	GLDEBUGCALL(glViewport(0, 0, WIDTH, HEIGHT));
 
 }
 
@@ -124,9 +135,11 @@ float Game::GetTime()
     return timer.GetTime();
 }
 
-GLFWwindow *Game::GetWindow()
+void Game::ResizeCallBack(int width, int height)
 {
-    return window;
+	WIDTH = width;
+	HEIGHT = height;
+	GLDEBUGCALL(glViewport(0, 0, WIDTH, HEIGHT));
 }
 
 Game::~Game()
