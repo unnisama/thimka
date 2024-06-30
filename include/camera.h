@@ -5,22 +5,33 @@
 #include "shader.h"
 #include "callbackevents.h"
 #include <GLFW/glfw3.h>
+#include "imgui.h"
 
 class Camera{
 
 private:
-    glm::mat4 transform;
     glm::mat4 view;
     glm::mat4 projection;
-    float fov = M_PI/2.0f;
-    float near = 0.01f;
-    float far = 10000.0f;
+    float fov = 45.0f;
     Shader *shader;
+    glm::vec2 prevmouse;
+    float speed = 0.04f;
+    int WIDTH;
+    int HEIGHT;
+    bool isfirst = true;
+    glm::vec2 startpos;
 
 public:
-    Camera(int WIDTH, int HEIGHT, Shader* shader);
-    void WindowResizeCallBack(int WIDTH, int HEIGHT);
+    Camera(int width, int height, Shader* shader);
+    void WindowResizeCallBack(int width, int height);
     void SetUniforms();
-    void Inputs(GLFWwindow *window);
+    void Translate(glm::vec3 translate);
+    void RotateX(float r);
+    void RotateY(float r);
+    void RotateZ(float r);
+    void MouseWheelCallBack(double xoff, double yoff);
+    void Inputs(GLFWwindow *window, ImVec2 wsize);
     ~Camera();
+public:
+    glm::mat4 model;
 };

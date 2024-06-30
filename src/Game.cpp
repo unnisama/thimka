@@ -104,8 +104,13 @@ Game::Game(int width, int height, const char *title) : timer()
         this->ResizeCallBack(width, height);
     });
 
+	glfwSetScrollCallback(window, MouseWheelCallBack);
+
 	GLDEBUGCALL(glViewport(0, 0, WIDTH, HEIGHT));
 
+	GLDEBUGCALL(glEnable(GL_DEPTH_TEST));
+	GLDEBUGCALL(glEnable(GL_BLEND));
+	GLDEBUGCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }
 
 void Game::HandleBufferAndEvent()
@@ -144,5 +149,7 @@ void Game::ResizeCallBack(int width, int height)
 
 Game::~Game()
 {
+	GLDEBUGCALL(glDisable(GL_DEPTH_TEST));
+	GLDEBUGCALL(glDisable(GL_BLEND));
     glfwTerminate();
 }

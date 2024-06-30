@@ -39,46 +39,84 @@ int main(void)
 
     Gui gui(game.GetWindow(), &game);
 
-    
-
     Renderer renderer;
-    float positions[16] = {
-        0.5f,
-        0.5f,
-        1.0f,
-        1.0f,
-        -0.5f,
-        0.5f,
-        0.0f,
-        1.0f,
-        -0.5f,
-        -0.5f,
-        0.0f,
-        0.0f,
-        0.5f,
-        -0.5f,
-        1.0f,
-        0.0f,
+
+
+    uint32_t indexes[24] = {
+        0, 1, 2,
+        2, 3, 0,
     };
 
-    uint32_t indexes[6] = {
-        0, 1, 2,
-        2, 3, 0};
+    float positions[] = {
 
-    VertexBuffer vb(positions, sizeof(float) * 4 * 4, GL_STREAM_DRAW);
+    };
+
+
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    
+
+    VertexBuffer vb(vertices, sizeof(float) * 180, GL_STREAM_DRAW);
 
     ArrayLayout aly;
-    aly.AddFloat(2);
+    aly.AddFloat(3);
     aly.AddFloat(2);
 
     VertexArray va(&vb, &aly);
-    IndexBuffer ib(indexes, 6);
+    //IndexBuffer ib(indexes, 6);
     Texture texture("../assets/textures/oak.png");
     texture.Bind(0);
 
     va.Enable();
 
     Shader shader("../assets/shaders/fragment.glsl", "../assets/shaders/vertex.glsl");
+
+    if(!shader.GetStatus()){
+        printf("Shader failed!\n");
+        exit(0);
+    }
 
     shader.Use();
 
@@ -99,16 +137,18 @@ int main(void)
 
     float dt = game.Step();
 
-    auto t = glm::vec3(0.0f, 0.0f, 0.0f);
-
-        while (!game.ShouldClose())
+    
+    
+    while (!game.ShouldClose())
     {
-        GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT));
+        auto t = glm::vec3(0.0f);   
+        GLDEBUGCALL(glClearColor(0.094f, 0.094f, 0.094f, 1.0f));
+        GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         GLDEBUGCALL(glUniform1f(deltatime_, dt));
         GLDEBUGCALL(glUniform1f(time_, game.GetTime()));
 
-        renderer.Draw(va, ib, shader);
+        renderer.Draw(va, 180, shader);
 
         gui.NewFrame();
 
@@ -124,7 +164,7 @@ int main(void)
         ImGui::Text("FTime: %.3f", dt);
         ImGui::Text("FPS: %.f", 1.0f / dt);
 
-        camera.Inputs(Game::GetWindow());
+        camera.Inputs(Game::GetWindow(), ImGui::GetWindowSize());
 
         ImGui::End();
 

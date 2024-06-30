@@ -5,7 +5,7 @@ IndexBuffer::IndexBuffer(void *data, size_t count)
     this->count = count;
     GLDEBUGCALL(glGenBuffers(1, &m_ID));
     GLDEBUGCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ID));
-    GLDEBUGCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, data, GL_STATIC_DRAW));
+    GLDEBUGCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * count, data, GL_STREAM_DRAW));
 }
 
 IndexBuffer::~IndexBuffer()

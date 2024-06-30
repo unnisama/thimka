@@ -10,4 +10,5 @@
 class Renderer{
 public:
     void Draw(VertexArray &va, IndexBuffer& ib, Shader& shader);
+    void Draw(VertexArray &va, size_t vertices, Shader &shader);
 };
