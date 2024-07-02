@@ -19,11 +19,5 @@ void main()
 
     FragColor = texture(u_texture, TexCoord);
 
-    if(FragColor.a == 0.0){
-        return;
-    }
-    
-    FragColor = FragColor - vec4(TexCoord*.2, mapsin(time)*.2, 0.0);
-
     // FragColor = vec4(TexCoord, mapsin(time), 1.0);
 }

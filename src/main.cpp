@@ -15,7 +15,7 @@
 #include "renderer.h"
 #include "texture.h"
 #include <iomanip>
-#include "camera.h"
+#include "camera2.h"
 
 int WIDTH = 640;
 int HEIGHT = 480;
@@ -41,72 +41,55 @@ int main(void)
 
     Renderer renderer;
 
-
-    uint32_t indexes[24] = {
-        0, 1, 2,
-        2, 3, 0,
-    };
-
     float positions[] = {
-
-    };
-
-
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
     };
 
-    
+    uint32_t indexes[36] = {
+        8, 11, 4,
+        4, 7, 8,
 
-    VertexBuffer vb(vertices, sizeof(float) * 180, GL_STREAM_DRAW);
+        2, 6, 5,
+        5, 9, 2,
+
+        10, 12, 0,
+        0, 2, 10,
+
+        3, 4, 14,
+        14, 13, 3,
+
+        0, 16, 6,
+        6, 2, 0,
+
+        7, 4, 3,
+        3, 1, 15
+    };
+
+    VertexBuffer vb(positions, sizeof(float) * 180, GL_STREAM_DRAW);
 
     ArrayLayout aly;
     aly.AddFloat(3);
     aly.AddFloat(2);
 
     VertexArray va(&vb, &aly);
-    //IndexBuffer ib(indexes, 6);
-    Texture texture("../assets/textures/oak.png");
+    IndexBuffer ib(indexes, 36);
+    Texture texture("../assets/textures/imas.png");
     texture.Bind(0);
 
     va.Enable();
@@ -120,9 +103,7 @@ int main(void)
 
     shader.Use();
 
-    Camera camera(WIDTH, HEIGHT, &shader);
-
-    camera.SetUniforms();
+    Camera2 camera(WIDTH, HEIGHT, glm::vec3(0.0f, 0.0f, 10.0f), 45.0f, 0.01f, 100.0f, shader);
 
     GLuint time_ = shader.GetUniformLocation("time");
     GLuint freqid = shader.GetUniformLocation("freq");
@@ -132,23 +113,23 @@ int main(void)
 
     bool menuopen = true;
 
-    float freq = 1.0f;
+    float freq = 0.0f;
     GLDEBUGCALL(glUniform1f(freqid, freq));
 
     float dt = game.Step();
 
-    
-    
+    glm::mat4 model(1.0f);
+
+
     while (!game.ShouldClose())
     {
-        auto t = glm::vec3(0.0f);   
         GLDEBUGCALL(glClearColor(0.094f, 0.094f, 0.094f, 1.0f));
         GLDEBUGCALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
         GLDEBUGCALL(glUniform1f(deltatime_, dt));
         GLDEBUGCALL(glUniform1f(time_, game.GetTime()));
 
-        renderer.Draw(va, 180, shader);
+        renderer.Draw(va, ib, shader);
 
         gui.NewFrame();
 
@@ -166,6 +147,9 @@ int main(void)
 
         camera.Inputs(Game::GetWindow(), ImGui::GetWindowSize());
 
+        model = glm::rotate(model, freq*dt, glm::vec3(1.0f, 1.0f, 0.0f));
+
+        shader.SetMat4f("umodel", model);
         ImGui::End();
 
         gui.EndFrame();
