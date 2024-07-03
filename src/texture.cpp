@@ -1,6 +1,6 @@
 #include "texture.h"
 
-Texture::Texture(const char *path)
+Texture::Texture(const char *path, unsigned int slot)
 {
     stbi_set_flip_vertically_on_load(1);
 
@@ -11,6 +11,8 @@ Texture::Texture(const char *path)
     }
     // Generating ID
     GLDEBUGCALL(glGenTextures(1, &m_ID));
+
+    GLDEBUGCALL(glActiveTexture(GL_TEXTURE0+slot));
     // Binding 
     GLDEBUGCALL(glBindTexture(GL_TEXTURE_2D, m_ID));
 
@@ -37,8 +39,9 @@ Texture::~Texture()
 
 void Texture::Bind(unsigned int slot)
 {
-    GLDEBUGCALL(glActiveTexture(GL_TEXTURE0 + slot));
+    GLDEBUGCALL(glActiveTexture(GL_TEXTURE0+slot));
     GLDEBUGCALL(glBindTexture(GL_TEXTURE_2D, m_ID));
+    
 }
 
 void Texture::UnBind()

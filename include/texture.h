@@ -11,9 +11,11 @@ private:
     unsigned char *data;
     int m_BPP;
 public:
-    Texture(const char *path);
+    Texture(const char *path, unsigned int slot);
     ~Texture();
     void Bind(unsigned int slot);
+    int getWidth() const { return m_Width; };
+    int getHeight() const { return m_Height; };
     void UnBind();
 
 };

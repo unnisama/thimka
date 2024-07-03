@@ -8,7 +8,7 @@ private:
     uint32_t count;
 
 public:
-    IndexBuffer(void *data, size_t count);
+    IndexBuffer(void *data, size_t count, GLenum usage);
     ~IndexBuffer();
 
     void Bind() const;

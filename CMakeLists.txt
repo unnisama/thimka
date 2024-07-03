@@ -16,7 +16,6 @@ set(
     src/debug.cpp
     src/texture.cpp
     src/camera.cpp
-    src/camera2.cpp
     src/callbackevents.cpp
 
 #   stb

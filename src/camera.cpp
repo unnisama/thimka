@@ -1,128 +1,143 @@
 #include "camera.h"
 
-Camera::Camera(int width, int height, Shader* shader)
+Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float nearPlane, float farPlane, Shader &shader)
 {
-    this->shader = shader;
-    model = glm::mat4(1.0f);
-    loc = glm::vec3(0.0f, 0.0f, -10.0f);
-    orientation = glm::vec3(0.0f, 0.0f, 1.0f);
-    view = glm::lookAt(loc, loc + orientation, glm::vec3(0.0f, 1.0f, 0.0f));
+	Camera::width = width;
+	Camera::height = height;
+	Position = position;
+	near = nearPlane;
+	far = farPlane;
+	fov = FOVdeg;
+	this->shader = &shader;
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
 
-    this->WIDTH = width;
-    this->HEIGHT = height;
+	
+	view = glm::lookAt(Position, Position + Orientation, Up);
+	
+	projection = glm::perspective(glm::radians(fov), (float)width / height, near, far);
 
-    projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.01f, 1000.0f);
+	
+	shader.SetMat4f("uview", view);
+	shader.SetMat4f("uprojection", projection);
 
-    AddResizeCallback([this](int width, int height){
+	AddResizeCallback([this](int width, int height){
         this->WindowResizeCallBack(width, height);
     });
-    AddMouseWheelCallback([this](double xoff, double yoff){
-        this->MouseWheelCallBack(xoff, yoff);
-    });
+}
+
+void Camera::Inputs(GLFWwindow *window, ImVec2 size, float dt)
+{
+	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		Position += speed * Orientation * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		Position += speed * -glm::normalize(glm::cross(Orientation, Up)) * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		Position += speed * -Orientation * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		Position += speed * glm::normalize(glm::cross(Orientation, Up)) * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		Position += speed * Up * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		Position += speed * -Up * dt;
+		Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		speed = hspeed;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	{
+		speed = lspeed;
+	}
+
+	
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+
+		double mouseX;
+		double mouseY;
+
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+
+		if (firstClick)
+		{
+			prevmouse.x = mouseX;
+			prevmouse.y = mouseY;
+			firstmouse.x = mouseX;
+			firstmouse.y = mouseY;
+			firstClick = false;
+		}
+
+		if (size.x > firstmouse.x && size.y > firstmouse.y)
+		{
+			return;
+		}
+
+		
+		auto currentmouse = glm::vec2(mouseX, mouseY);
+		auto diff = currentmouse - prevmouse;
+
+		
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		
+		float rotX = M_PI  * (float)diff.y / height;
+		float rotY = M_PI * (float)diff.x / width;
+		RotateXY(rotX * sensitivity * dt, rotY * sensitivity * dt);
+
+		prevmouse = currentmouse;
+	}
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	{
+		
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+		firstClick = true;
+	}
+}
+void Camera::Update()
+{
+	glm::mat4 view = glm::lookAt(Position, Position + Orientation, Up);
+
+	shader->SetMat4f("uview", view);
+}
+
+void Camera::RotateXY(float rotx, float roty)
+{
+	glm::vec3 newOrientation = glm::rotate(Orientation, -rotx, glm::normalize(glm::cross(Orientation, Up)));
+
+	if (std::abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+	{
+		Orientation = newOrientation;
+	}
+
+	// Rotates the Orientation left and right
+	Orientation = glm::rotate(Orientation, -roty, Up);
+	Update();
 }
 
 void Camera::WindowResizeCallBack(int width, int height)
 {
-    this->WIDTH = width;
-    this->HEIGHT = height;
-    projection = glm::perspective(fov, (float)width / (float)height, 0.01f, 100.0f);
-    shader->SetMat4f("uprojection", projection);
-}
-
-void Camera::SetUniforms()
-{
-    shader->SetMat4f("umodel", model);
-    shader->SetMat4f("uview", view);
-    shader->SetMat4f("uprojection", projection);
-}
-
-void Camera::Translate(glm::vec3 translate)
-{
-    // loc -= translate;
-    // target -= translate;
-    // view = glm::lookAt(loc, target, up);
-    // shader->SetMat4f("uview", view);
-    loc += translate;
-    view = glm::translate(view, translate);
-    shader->SetMat4f("uview", view);
-}
-
-void Camera::RotateX(float r)
-{
-    glm::vec3 axis = glm::normalize(glm::cross(orientation, up));
-    orientation = glm::rotate(orientation, r, axis);
-}
-void Camera::RotateY(float r)
-{
-     orientation = glm::rotate(orientation, r, up);
-}
-void Camera::RotateZ(float r)
-{
-    
-}
-
-void Camera::MouseWheelCallBack(double xoff, double yoff)
-{
-    // Translate(glm::vec3(0.0f, 0.0f, yoff));
-}
-
-void Camera::Inputs(GLFWwindow *window, ImVec2 wsize)
-{
-    float rotx = 0.0f;
-    float roty = 0.0f;
-    float rotz = 0.0f;
-
-    if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)){
-        double xpos;
-        double ypos;
-        glfwGetCursorPos(window, &xpos, &ypos);
-
-        if (xpos < wsize.x && ypos < wsize.y){
-            return;
-        }
-
-        auto currentpos = glm::vec2(xpos, ypos);
-
-        if(isfirst){
-            isfirst = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            prevmouse = currentpos;
-        }
-
-        auto diff = currentpos - prevmouse;
-
-        RotateX((diff.x/WIDTH)*speed*M_PI);
-        RotateY((diff.y/HEIGHT)*speed*M_PI);
-       
-
-        prevmouse = currentpos;
-
-    }else{
-        if(!isfirst){
-            isfirst = true;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        }
-    }
-
-    if(glfwGetKey(window, GLFW_KEY_W)){
-        Translate(orientation*-speed);
-    }
-    else if(glfwGetKey(window, GLFW_KEY_S)){
-        Translate(orientation*-speed);
-    }
-    if(glfwGetKey(window, GLFW_KEY_D)){
-        auto normcosp = glm::normalize(glm::cross(orientation, up));
-        Translate(normcosp*speed);
-    }
-    else if(glfwGetKey(window, GLFW_KEY_A)){
-        auto normcosp = glm::normalize(glm::cross(orientation, up));
-        Translate(normcosp*-speed);
-    }
-
-    
-
-}
-
-Camera::~Camera()
-{
+	auto projection = glm::perspective(glm::radians(fov), (float)width / height, near, far);
+	Camera::width = width;
+	Camera::height = height;
+	shader->SetMat4f("uprojection", projection);
 }

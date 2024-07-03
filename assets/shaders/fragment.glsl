@@ -4,7 +4,12 @@ uniform float deltatime;
 uniform float time;
 uniform float freq;
 uniform sampler2D u_texture;
+// uniform sampler2D u_textureblur;
 in vec2 TexCoord;
+uniform float width;
+uniform float height;
+uniform int radius = 3;
+
 
 
 float map(float value, float min1, float max1, float min2, float max2) {
@@ -14,10 +19,66 @@ float map(float value, float min1, float max1, float min2, float max2) {
 float mapsin(float v){
     return map(sin(v), -1.0, 1.0, 0.2, 0.8);
 }
+
+vec4 GetInbound(vec2 pos, vec2 off){
+    vec2 poscopy = pos;
+    poscopy += off;
+
+    if(poscopy.x < 0.0 || poscopy.x > 1.0 || poscopy.y < 0.0 || poscopy.y > 1.0){
+        return vec4(0.0, 0.0, 0.0, -1.0);
+    }
+
+    return texture(u_texture, poscopy);
+}
+
+vec4 BlurPixel(int rad){
+    float pixwidth = 1.0/width;
+    float pixheight = 1.0/height;
+
+    float rid = float((rad-1)/2);
+    vec2 subty = vec2(rid*pixwidth, rid*pixheight);
+
+    vec2 posp = TexCoord - subty;
+
+    float count = 0.0;
+    vec4 outcolor = vec4(0.0);
+
+    for(int i = 0; i < rad; i++){
+        for(int j = 0; j < rad; j++){
+            vec4 retcolor = GetInbound(posp, vec2(float(i)*pixwidth, float(j)*pixheight));
+            if(retcolor.a == -1){
+                continue;
+            }
+            outcolor += retcolor;
+            count += 1.0;
+        }
+    }
+
+    vec4 blur = outcolor/count;
+
+    return blur;
+}
+
+int isInRange(vec4 v, float r, vec4 vc){
+    int outt = 0;
+    if (v.r+r > vc.r && v.r-r < vc.r){
+        outt += 1;
+    }
+    if (v.g+r > vc.g && v.g-r < vc.g){
+        outt += 1;
+    }
+    if (v.b+r > vc.b && v.b-r < vc.b){
+        outt += 1;
+    }
+    return outt;
+}
+
 void main()
 {
 
-    FragColor = texture(u_texture, TexCoord);
+    vec4 color1 = texture(u_texture, TexCoord);
 
-    // FragColor = vec4(TexCoord, mapsin(time), 1.0);
+    color1 = color1 * color1;
+    
+    FragColor = color1;
 }
