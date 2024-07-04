@@ -29,15 +29,18 @@ private:
     VertexBuffer *vb = nullptr;
     IndexBuffer *ib = nullptr;
     ArrayLayout aly;
+    glm::mat4 model{1.0f};
 
 public:
     Mesh(std::vector<Mesh_Vertex> verts, std::vector<Mesh_Triangle> triangle);
     Mesh(MeshPrimitive primitive);
+    void Init();
     void Setup();
     void AddVertex(Mesh_Vertex vert);
     void AddTriangle(Mesh_Triangle triangle);
     void SetVertices(std::vector<Mesh_Vertex> verts);
     void SetTriangles(std::vector<Mesh_Triangle> triangle);
+    void Translate(glm::vec3 t);
     /// @brief Expects the shader on to be in use
     /// @param render 
     /// @param shader 

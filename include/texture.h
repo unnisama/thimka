@@ -10,12 +10,16 @@ private:
     GLuint m_ID;
     unsigned char *data;
     int m_BPP;
+    GLuint slotid;
 public:
     Texture(const char *path, unsigned int slot);
     ~Texture();
     void Bind(unsigned int slot);
-    int getWidth() const { return m_Width; };
-    int getHeight() const { return m_Height; };
+    inline int getWidth() const { return m_Width; };
+    inline int getHeight() const { return m_Height; };
     void UnBind();
+    inline GLuint GetSlotID() const {
+        return slotid;
+    };
 
 };

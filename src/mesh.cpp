@@ -2,33 +2,76 @@
 
 Mesh::Mesh(std::vector<Mesh_Vertex> verts, std::vector<Mesh_Triangle> indexes)
 {
-    aly.AddFloat(3);
-    aly.AddFloat(2);
     vertices = verts;
     triangles = indexes;
+    Init();
+}
+
+Mesh::Mesh(MeshPrimitive primitive)
+{
+    if (primitive == MeshPrimitive::Cube)
+    {
+        std::vector<Mesh_Vertex> verts = {
+            {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f}},
+            {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f}},
+            {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f}},
+            {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f}},
+            {{ 0.5f,  0.5f, -0.5f}, {0.0f, 1.0f}},
+            {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f}},
+            {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f}},
+            {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f}},
+
+            {{-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f}},
+            {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f}},
+
+            {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f}},
+            {{ 0.5f, -0.5f,  0.5f}, {0.0f, 1.0f}}
+        };
+        std::vector<Mesh_Triangle> tris = {
+            {0, 1, 2},
+            {2, 3, 0},
+
+            {4, 5, 6},
+            {6, 7, 4},
+
+            {1, 5, 6},
+            {6, 2, 1},
+
+            {0, 4, 7},
+            {7, 3, 0},
+
+            {4, 5, 8},
+            {8, 9, 4},
+
+            {6, 7, 11},
+            {11, 10, 6}
+        };
+        vertices = verts;
+        triangles = tris;
+        Init();
+    }
+}
+
+void Mesh::Init()
+{
+    aly.AddFloat(3);
+    aly.AddFloat(2);
     va = new VertexArray(&aly);
     va->Bind();
     Setup();
     va->Enable();
     va->Unbind();
-    
-}
-
-Mesh::Mesh(MeshPrimitive primitive)
-{
-    if(primitive == MeshPrimitive::Cube){
-        
-    }
 }
 
 void Mesh::Setup()
 {
     // no way only one get destroyed
-    if(ib != nullptr){
+    if (ib != nullptr)
+    {
         delete ib;
         delete vb;
     }
-    
+
     vb = new VertexBuffer(vertices.data(), vertices.size() * sizeof(Mesh_Vertex), GL_STREAM_DRAW);
     ib = new IndexBuffer(triangles.data(), triangles.size() * 3, GL_STREAM_DRAW);
 }
@@ -53,7 +96,8 @@ void Mesh::SetVertices(std::vector<Mesh_Vertex> verts)
 {
     va->Bind();
     vertices = verts;
-    if(vb != nullptr){
+    if (vb != nullptr)
+    {
         delete vb;
     }
     vb = new VertexBuffer(vertices.data(), vertices.size() * sizeof(Mesh_Vertex), GL_STREAM_DRAW);
@@ -64,15 +108,22 @@ void Mesh::SetTriangles(std::vector<Mesh_Triangle> indexes)
 {
     va->Bind();
     triangles = indexes;
-    if(ib != nullptr){
+    if (ib != nullptr)
+    {
         delete ib;
     }
     ib = new IndexBuffer(triangles.data(), triangles.size() * 3, GL_STREAM_DRAW);
     va->Unbind();
 }
 
+void Mesh::Translate(glm::vec3 t)
+{
+    model = glm::translate(model, t);
+}
+
 void Mesh::Draw(Renderer &render, Shader &shader)
 {
+    shader.SetMat4f("umodel", model);
     render.Draw(*va, *ib, shader);
 }
 

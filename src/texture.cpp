@@ -41,6 +41,7 @@ void Texture::Bind(unsigned int slot)
 {
     GLDEBUGCALL(glActiveTexture(GL_TEXTURE0+slot));
     GLDEBUGCALL(glBindTexture(GL_TEXTURE_2D, m_ID));
+    slotid = slot;
     
 }
 
