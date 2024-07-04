@@ -71,6 +71,8 @@ int main(void)
     shader.SetUniform1i("width", texture.getWidth());
     shader.SetUniform1i("height", texture.getHeight());
     int radius = 5;
+
+    int mesh_count = 0;
     
     while (!game.ShouldClose())
     {
@@ -104,12 +106,12 @@ int main(void)
                 ImGui::DragFloat3("Position", glm::value_ptr(t), 0.01f, -20.0f, 20.0f);
 
                 if(ImGui::Button("Add Cube")){
+                    mesh_count += 1;
                     Mesh *mesh = new Mesh(MeshPrimitive::Cube);
                     mesh->Translate(t);
                     meshes.push_back(mesh);
                     char *d = (char *)malloc(10);
-                    int si = (int)meshes.size();
-                    sprintf(d, "%d", si-1);
+                    sprintf(d, "%d", mesh_count);
                     listinfo.push_back(d);
                 }
 
