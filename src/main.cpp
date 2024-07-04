@@ -53,7 +53,7 @@ int main(void)
 
     shader.Use();
 
-    Texture texture("../assets/textures/oak.png", 0);
+    Texture texture("../assets/textures/imas.png", 0);
     texture.Bind(0);
 
     shader.SetUniform1i("u_texture", texture.GetSlotID());
@@ -68,7 +68,9 @@ int main(void)
 
     std::vector<Mesh *> meshes;
     std::vector<char *> listinfo;
-    
+    shader.SetUniform1i("width", texture.getWidth());
+    shader.SetUniform1i("height", texture.getHeight());
+    int radius = 5;
     
     while (!game.ShouldClose())
     {
@@ -93,6 +95,10 @@ int main(void)
                 ImGui::Text("FTime: %.3f", dt);
                 ImGui::Text("FPS: %.f", 1.0f / dt);
 
+                if(ImGui::DragInt("Radius", &radius, 1.0f, 5, 12)){
+                    shader.SetUniform1i("radius", radius);
+                }
+
                 ImGui::Separator();
 
                 ImGui::DragFloat3("Position", glm::value_ptr(t), 0.01f, -20.0f, 20.0f);
@@ -107,7 +113,6 @@ int main(void)
                     listinfo.push_back(d);
                 }
 
-                
                 
                 if (meshes.size() > 0)
                 {

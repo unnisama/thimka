@@ -6,6 +6,7 @@ uniform float freq;
 uniform sampler2D u_texture;
 uniform int width = 0;
 uniform int height = 0;
+uniform int radius = 5;
 in vec2 TexCoord;
 
 float map(float value, float min1, float max1, float min2, float max2) {
@@ -74,7 +75,7 @@ void main()
 
     vec4 color1 = texture(u_texture, TexCoord);
 
-    color1 = color1 * color1;
+    color1 = color1/BlurPixel(radius);
     
     FragColor = color1;
 }
