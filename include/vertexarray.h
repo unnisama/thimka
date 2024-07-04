@@ -27,10 +27,9 @@ class VertexArray{
 private:
     GLuint m_ID; 
     ArrayLayout* layout;
-    VertexBuffer *vb;
     
 public:
-    VertexArray(VertexBuffer *vb, ArrayLayout* layout);
+    VertexArray(ArrayLayout* layout);
     void Bind();
     void Unbind();
     void SetAttribs();

@@ -1,10 +1,9 @@
 #include "vertexarray.h"
 
-VertexArray::VertexArray(VertexBuffer *vb, ArrayLayout* layout)
+VertexArray::VertexArray(ArrayLayout* layout)
 {
     GLDEBUGCALL(glGenVertexArrays(1, &m_ID));
     GLDEBUGCALL(glBindVertexArray(m_ID));
-    this->vb = vb;
     this->layout = layout;
 }
 
@@ -61,7 +60,6 @@ void VertexArray::SetAttribs()
 void VertexArray::Enable()
 {
     Bind();
-    vb->Bind();
     SetAttribs();
 }
 
