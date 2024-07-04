@@ -7,8 +7,11 @@ Mesh::Mesh(std::vector<Mesh_Vertex> verts, std::vector<Mesh_Triangle> indexes)
     vertices = verts;
     triangles = indexes;
     va = new VertexArray(&aly);
+    va->Bind();
     Setup();
+    va->Enable();
     va->Unbind();
+    
 }
 
 Mesh::Mesh(MeshPrimitive primitive)
@@ -26,8 +29,8 @@ void Mesh::Setup()
         delete vb;
     }
     
-    vb = new VertexBuffer(vertices.data(), vertices.size(), GL_STREAM_DRAW);
-    ib = new IndexBuffer(triangles.data(), triangles.size(), GL_STREAM_DRAW);
+    vb = new VertexBuffer(vertices.data(), vertices.size() * sizeof(Mesh_Vertex), GL_STREAM_DRAW);
+    ib = new IndexBuffer(triangles.data(), triangles.size() * 3, GL_STREAM_DRAW);
 }
 
 void Mesh::AddVertex(Mesh_Vertex vert)
@@ -53,7 +56,7 @@ void Mesh::SetVertices(std::vector<Mesh_Vertex> verts)
     if(vb != nullptr){
         delete vb;
     }
-    vb = new VertexBuffer(vertices.data(), vertices.size(), GL_STREAM_DRAW);
+    vb = new VertexBuffer(vertices.data(), vertices.size() * sizeof(Mesh_Vertex), GL_STREAM_DRAW);
     va->Unbind();
 }
 
@@ -64,7 +67,7 @@ void Mesh::SetTriangles(std::vector<Mesh_Triangle> indexes)
     if(ib != nullptr){
         delete ib;
     }
-    ib = new IndexBuffer(triangles.data(), triangles.size(), GL_STREAM_DRAW);
+    ib = new IndexBuffer(triangles.data(), triangles.size() * 3, GL_STREAM_DRAW);
     va->Unbind();
 }
 

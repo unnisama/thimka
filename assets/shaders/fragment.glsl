@@ -4,13 +4,9 @@ uniform float deltatime;
 uniform float time;
 uniform float freq;
 uniform sampler2D u_texture;
-// uniform sampler2D u_textureblur;
+uniform int width = 0;
+uniform int height = 0;
 in vec2 TexCoord;
-uniform float width;
-uniform float height;
-uniform int radius = 3;
-
-
 
 float map(float value, float min1, float max1, float min2, float max2) {
     return min2 + (value - min1) * (max2 - min2) / (max1 - min1);

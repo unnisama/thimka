@@ -9,10 +9,7 @@ enum class MeshPrimitive{
     Cube
 };
 
-
-class Mesh
-{
-    struct Mesh_Vertex
+struct Mesh_Vertex
     {
         float postion[3];
         float uv[2];
@@ -23,12 +20,14 @@ class Mesh
         unsigned int indexes[3];
     };
 
+class Mesh
+{
 private:
     std::vector<Mesh_Vertex> vertices;
     std::vector<Mesh_Triangle> triangles;
-    VertexArray *va;
-    VertexBuffer *vb;
-    IndexBuffer *ib;
+    VertexArray *va = nullptr;
+    VertexBuffer *vb = nullptr;
+    IndexBuffer *ib = nullptr;
     ArrayLayout aly;
 
 public:
