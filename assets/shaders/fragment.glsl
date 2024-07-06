@@ -1,4 +1,4 @@
-#version 330
+#version 430
 out vec4 FragColor;
 uniform float deltatime;
 uniform float time;
@@ -74,8 +74,6 @@ void main()
 {
 
     vec4 color1 = texture(u_texture, TexCoord);
-
-    color1 = color1/BlurPixel(radius);
     
-    FragColor = color1;
+    FragColor = color1 * color1;
 }

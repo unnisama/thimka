@@ -21,11 +21,11 @@ Mesh::Mesh(MeshPrimitive primitive)
             {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f}},
             {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f}},
 
-            {{-0.5f,  0.5f,  0.5f}, {1.0f, 0.0f}},
-            {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f}},
-
-            {{-0.5f, -0.5f,  0.5f}, {1.0f, 1.0f}},
-            {{ 0.5f, -0.5f,  0.5f}, {0.0f, 1.0f}}
+            {{ 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f}},
+            {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f}},
+            
+            {{-0.5f, -0.5f,  -0.5f}, {0.0f, 1.0f}},
+            {{ 0.5f, -0.5f,  -0.5f}, {1.0f, 1.0f}}
         };
         std::vector<Mesh_Triangle> tris = {
             {0, 1, 2},
@@ -40,11 +40,11 @@ Mesh::Mesh(MeshPrimitive primitive)
             {0, 4, 7},
             {7, 3, 0},
 
-            {4, 5, 8},
-            {8, 9, 4},
+            {0, 1, 9},
+            {9, 8, 0},
 
-            {6, 7, 11},
-            {11, 10, 6}
+            {3, 2, 10},
+            {10, 11, 3}
         };
         vertices = verts;
         triangles = tris;
@@ -125,6 +125,11 @@ void Mesh::Draw(Renderer &render, Shader &shader)
 {
     shader.SetMat4f("umodel", model);
     render.Draw(*va, *ib, shader);
+}
+
+void Mesh::Draw(Renderer &render, Shader &shader, int count)
+{
+    render.DrawInstanced(*va, *ib, shader, count);
 }
 
 Mesh::~Mesh()

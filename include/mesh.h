@@ -45,5 +45,6 @@ public:
     /// @param render 
     /// @param shader 
     void Draw(Renderer &render, Shader &shader);
+    void Draw(Renderer &render, Shader &shader, int count);
     ~Mesh();
 };

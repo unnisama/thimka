@@ -18,6 +18,7 @@ set(
     src/camera.cpp
     src/callbackevents.cpp
     src/mesh.cpp
+    src/storagebuffer.cpp
 
 #   stb
     vendor/stb/src/stb_image.cpp

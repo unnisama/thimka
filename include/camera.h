@@ -38,7 +38,7 @@ public:
 	const float lspeed = 1.0f;
 	// Adjust the speed of the camera and it's sensitivity when looking around
 	float speed = lspeed;
-	float sensitivity = 50.0f;
+	float sensitivity = 2.0f;
 
 
 	// Camera constructor to set up initial values

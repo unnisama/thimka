@@ -1,14 +1,16 @@
-#version 330
+#version 430
 in vec3 aPos;
 in vec2 texCoord;
 out vec2 TexCoord;
-
+layout (binding = 3) readonly buffer ModelMatrices {
+    mat4 umodel[];
+};
 uniform float deltatime;
 uniform float time;
 uniform float freq;
 uniform mat4 uview;
 uniform mat4 uprojection;
-uniform mat4 umodel;
+
 
 float map(float value, float min1, float max1, float min2, float max2) {
     return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
@@ -27,5 +29,5 @@ void main()
 {
     TexCoord = texCoord;
     vec4 position = vec4(aPos, 1.0);
-    gl_Position = uprojection * uview * (umodel * position);
+    gl_Position = uprojection * uview * (umodel[gl_InstanceID] * position);
 }

@@ -112,7 +112,14 @@ void Shader::SetMat4f(const GLchar *name, glm::mat4& m4)
 {
     GLDEBUGCALL(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(m4)));
 }
-
+void Shader::SetMat4f(const GLchar *name, float *data, int count)
+{
+    GLDEBUGCALL(glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, data));
+}
+void Shader::SetVec3f(const GLchar *name, float *data, int count)
+{
+    GLDEBUGCALL(glUniform3fv(GetUniformLocation(name), count, data));
+}
 void Shader::SetUniform1i(const GLchar *name, int v)
 {
     GLDEBUGCALL(glUniform1i(GetUniformLocation(name), v));

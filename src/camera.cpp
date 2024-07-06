@@ -98,10 +98,10 @@ void Camera::Inputs(GLFWwindow *window, ImVec2 size, float dt)
 		
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-		
+
 		float rotX = M_PI  * (float)diff.y / height;
 		float rotY = M_PI * (float)diff.x / width;
-		RotateXY(rotX * sensitivity * dt, rotY * sensitivity * dt);
+		RotateXY(rotX * sensitivity, rotY * sensitivity);
 
 		prevmouse = currentmouse;
 	}
