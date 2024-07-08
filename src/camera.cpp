@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float nearPlane, float farPlane, Shader &shader)
+Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float nearPlane, float farPlane, std::vector<Shader*>* shaders)
 {
 	Camera::width = width;
 	Camera::height = height;
@@ -8,7 +8,7 @@ Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float ne
 	near = nearPlane;
 	far = farPlane;
 	fov = FOVdeg;
-	this->shader = &shader;
+	this->shaders = shaders;
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
@@ -17,9 +17,11 @@ Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float ne
 	
 	projection = glm::perspective(glm::radians(fov), (float)width / height, near, far);
 
-	
-	shader.SetMat4f("uview", view);
-	shader.SetMat4f("uprojection", projection);
+	for(Shader *shader : *shaders){
+		shader->Use();
+		shader->SetMat4f("uview", view);
+		shader->SetMat4f("uprojection", projection);
+	}
 
 	AddResizeCallback([this](int width, int height){
         this->WindowResizeCallBack(width, height);
@@ -99,8 +101,8 @@ void Camera::Inputs(GLFWwindow *window, ImVec2 size, float dt)
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
-		float rotX = M_PI  * (float)diff.y / height;
-		float rotY = M_PI * (float)diff.x / width;
+		float rotX = (float)diff.y / height;
+		float rotY = (float)diff.x / width;
 		RotateXY(rotX * sensitivity, rotY * sensitivity);
 
 		prevmouse = currentmouse;
@@ -117,7 +119,10 @@ void Camera::Update()
 {
 	glm::mat4 view = glm::lookAt(Position, Position + Orientation, Up);
 
-	shader->SetMat4f("uview", view);
+	for(Shader *shader : *shaders){
+		shader->Use();
+		shader->SetMat4f("uview", view);
+	}
 }
 
 void Camera::RotateXY(float rotx, float roty)
@@ -139,5 +144,8 @@ void Camera::WindowResizeCallBack(int width, int height)
 	auto projection = glm::perspective(glm::radians(fov), (float)width / height, near, far);
 	Camera::width = width;
 	Camera::height = height;
-	shader->SetMat4f("uprojection", projection);
+	for(Shader *shader : *shaders){
+		shader->Use();
+		shader->SetMat4f("uprojection", projection);
+	}
 }

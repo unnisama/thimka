@@ -6,7 +6,8 @@
 #include "renderer.h"
 
 enum class MeshPrimitive{
-    Cube
+    Cube,
+    Plane
 };
 
 struct Mesh_Vertex
@@ -29,11 +30,11 @@ private:
     VertexBuffer *vb = nullptr;
     IndexBuffer *ib = nullptr;
     ArrayLayout aly;
-    glm::mat4 model{1.0f};
-
+    
 public:
     Mesh(std::vector<Mesh_Vertex> verts, std::vector<Mesh_Triangle> triangle);
     Mesh(MeshPrimitive primitive);
+    Mesh(const char* path);
     void Init();
     void Setup();
     void AddVertex(Mesh_Vertex vert);
@@ -41,10 +42,15 @@ public:
     void SetVertices(std::vector<Mesh_Vertex> verts);
     void SetTriangles(std::vector<Mesh_Triangle> triangle);
     void Translate(glm::vec3 t);
+    void Scale(glm::vec3 t);
     /// @brief Expects the shader on to be in use
     /// @param render 
     /// @param shader 
-    void Draw(Renderer &render, Shader &shader);
-    void Draw(Renderer &render, Shader &shader, int count);
+    void Draw(Renderer *render, Shader *shader);
+    void Draw(Renderer *render, Shader *shader, int count);
     ~Mesh();
+    
+public:
+    glm::mat4 model{1.0f};
+
 };

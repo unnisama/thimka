@@ -9,7 +9,7 @@
 
 class Renderer{
 public:
-    void Draw(VertexArray &va, IndexBuffer& ib, Shader& shader);
-    void Draw(VertexArray &va, size_t vertices, Shader &shader);
-    void DrawInstanced(VertexArray &va, IndexBuffer &ib, Shader &shader, int count);
+    void Draw(VertexArray &va, IndexBuffer& ib);
+    void Draw(VertexArray &va, size_t vertices);
+    void DrawInstanced(VertexArray &va, IndexBuffer &ib, int count);
 };

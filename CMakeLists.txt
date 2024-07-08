@@ -19,6 +19,9 @@ set(
     src/callbackevents.cpp
     src/mesh.cpp
     src/storagebuffer.cpp
+    src/scene.cpp
+    src/ThimkaScene.cpp
+    src/App.cpp
 
 #   stb
     vendor/stb/src/stb_image.cpp

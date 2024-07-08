@@ -75,5 +75,5 @@ void main()
 
     vec4 color1 = texture(u_texture, TexCoord);
     
-    FragColor = color1 * color1;
+    FragColor = color1;
 }

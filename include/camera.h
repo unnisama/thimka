@@ -24,7 +24,7 @@ public:
 	float fov;
 	float near;
 	float far;
-	Shader* shader;
+	std::vector<Shader*>* shaders;
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
@@ -34,15 +34,15 @@ public:
 	int height;
 
 
-	const float hspeed = 2.0f;
-	const float lspeed = 1.0f;
+	const float hspeed = 1.0f;
+	const float lspeed = 0.5f;
 	// Adjust the speed of the camera and it's sensitivity when looking around
 	float speed = lspeed;
 	float sensitivity = 2.0f;
 
 
 	// Camera constructor to set up initial values
-	Camera(int width, int height, glm::vec3 position, float FOVdeg, float nearPlane, float farPlane, Shader& shader);
+	Camera(int width, int height, glm::vec3 position, float FOVdeg, float nearPlane, float farPlane, std::vector<Shader*>* shaders);
 
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, ImVec2 size, float dt);

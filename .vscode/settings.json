@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "cmath": "cpp",
         "any": "cpp",
         "array": "cpp",
         "atomic": "cpp",
@@ -10,6 +9,7 @@
         "charconv": "cpp",
         "chrono": "cpp",
         "clocale": "cpp",
+        "cmath": "cpp",
         "codecvt": "cpp",
         "compare": "cpp",
         "complex": "cpp",
@@ -73,6 +73,12 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "bitset": "cpp",
+        "forward_list": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "shared_mutex": "cpp",
+        "typeindex": "cpp"
     }
 }

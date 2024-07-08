@@ -11,8 +11,8 @@ Shader::Shader(const char *fragpath, const char *vertpath)
     auto fragp = frag.c_str();
     auto vertp = vert.c_str();
 
-    GLDEBUGCALL(glShaderSource(vs, 1, &vertp, NULL));
-    GLDEBUGCALL(glShaderSource(fs, 1, &fragp, NULL));
+    GLDEBUGCALL(glShaderSource(vs, 1, &vertp, nullptr));
+    GLDEBUGCALL(glShaderSource(fs, 1, &fragp, nullptr));
 
     GLDEBUGCALL(glCompileShader(vs));
     GLDEBUGCALL(glCompileShader(fs));
