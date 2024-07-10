@@ -23,6 +23,7 @@ public:
     bool LogError();
     GLuint GetUniformLocation(const GLchar *name);
     void SetUniform1f(const GLchar *name, float v);
+    void SetUniform3f(const GLchar *name, float v0, float v1, float v2);
     void SetUniform4f(const GLchar *name, float v0, float v1, float v2, float v3);
     void SetVec3f(const GLchar *name, float *data, int count);
     void SetMat4f(const GLchar *name, glm::mat4& m4);

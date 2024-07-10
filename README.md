@@ -2,7 +2,7 @@
 
 ### Certainly very inefficient
 ### Demo
-[!Demo](https://github.com/unnisama/thimka/assets/79842734/383582a9-1f58-4262-9b0e-5cf6a9d6ab7a)
+[!Demo](https://github.com/unnisama/thimka/assets/79842734/3db6db47-b79e-4403-a3a1-7378b4f7d86c)
 
 Required Packages
 - glfw

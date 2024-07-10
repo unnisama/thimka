@@ -9,9 +9,15 @@ private:
     std::vector<glm::mat4> meshes;
     StorageBuffer *sb;
     Texture *texture;
+    Texture *texture1;
     Shader *shader;
+    Shader *shader1;
     Mesh *plane;
     std::string assetspath;
+    Mesh *light;
+    glm::vec3 lightPos;
+    glm::vec3 lightcolor;
+    float freq;
 
 public:
     ThimkaScene(GLFWwindow *window, Gui* gui, std::string assetspath);

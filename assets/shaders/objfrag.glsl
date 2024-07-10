@@ -2,12 +2,17 @@
 out vec4 FragColor;
 uniform float deltatime;
 uniform float time;
-uniform float freq;
 uniform sampler2D u_texture;
+uniform sampler2D u_normal;
 uniform int width = 0;
 uniform int height = 0;
 uniform int radius = 5;
+uniform vec3 lightPos;
+uniform vec3 lightcolor;
+in vec3 apos;
 in vec2 TexCoord;
+in vec3 vnormal;
+
 
 float map(float value, float min1, float max1, float min2, float max2) {
     return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
@@ -72,8 +77,11 @@ int isInRange(vec4 v, float r, vec4 vc){
 
 void main()
 {
+    float ambient = 0.20;
+    vec3 lightdir = normalize(lightPos - apos);
+    float diffuse = max(0.0, dot(normalize(vnormal), lightdir));
+    float normal = max(0.0, dot(texture(u_normal, TexCoord).xyz, lightdir));
 
     vec4 color1 = texture(u_texture, TexCoord);
-    
-    FragColor = color1;
+    FragColor = vec4(color1.rgb * lightcolor * (diffuse+ambient) * normal, color1.a);
 }

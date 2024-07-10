@@ -39,20 +39,20 @@ Mesh::Mesh(MeshPrimitive primitive)
     if (primitive == MeshPrimitive::Cube)
     {
         std::vector<Mesh_Vertex> verts = {
-            {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f}},
-            {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f}},
-            {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f}},
-            {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f}},
-            {{ 0.5f,  0.5f, -0.5f}, {0.0f, 1.0f}},
-            {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f}},
-            {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f}},
-            {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f}},
+            {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}}, 
+            {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
+            {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
+            {{ 0.5f,  0.5f, -0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f,  0.5f, -0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
+            {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
 
-            {{ 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f}},
-            {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f}},
+            {{ 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
             
-            {{-0.5f, -0.5f,  -0.5f}, {0.0f, 1.0f}},
-            {{ 0.5f, -0.5f,  -0.5f}, {1.0f, 1.0f}}
+            {{-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{ 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}}
         };
         std::vector<Mesh_Triangle> tris = {
             {0, 1, 2},
@@ -78,10 +78,10 @@ Mesh::Mesh(MeshPrimitive primitive)
         Init();
     }else if(primitive == MeshPrimitive::Plane){
         std::vector<Mesh_Vertex> verts = {
-            {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f}},
-            {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f}},
-            {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f}},
-            {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f}},
+            {{ 0.5f,  0.5f,  0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}},
+            {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
+            {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}
         };
         std::vector<Mesh_Triangle> tris = {
             {0, 1, 2},
@@ -93,10 +93,11 @@ Mesh::Mesh(MeshPrimitive primitive)
     }
 }
 
-Mesh::Mesh(const char *path)
+Mesh::Mesh(const char *path, bool doInit)
 {
     std::vector<glm::vec3> verts;
     std::vector<glm::vec2> uvs;
+    std::vector<glm::vec3> normals;
     std::map<std::string, int> fdata;
     std::ifstream f(path);
     if(!f.good()){
@@ -111,12 +112,17 @@ Mesh::Mesh(const char *path)
             std::vector<std::string> strs = Split(line, " ");
             verts.push_back(glm::vec3(std::stof(strs[0]), std::stof(strs[1]), std::stof(strs[2])));
         }
-        if(line.find("vt ") == 0){
+        else if(line.find("vt ") == 0){
             line = line.substr(3, line.size()-3);
             std::vector<std::string> strs = Split(line, " ");
             uvs.push_back(glm::vec2(std::stof(strs[0]), std::stof(strs[1])));
         }
-        if(line.find("f ") == 0){
+        else if(line.find("vn ") == 0){
+            line = line.substr(3, line.size()-3);
+            std::vector<std::string> strs = Split(line, " ");
+            normals.push_back(glm::vec3(std::stof(strs[0]), std::stof(strs[1]), std::stof(strs[2])));
+        }
+        else if(line.find("f ") == 0){
             line = line.substr(2, line.size()-2);
             std::vector<std::string> strs = Split(line, " ");
             if(fdata.find(strs[0]) == fdata.end()){
@@ -124,11 +130,15 @@ Mesh::Mesh(const char *path)
                 Mesh_Vertex vert;
                 glm::vec3 vt = verts[std::stoi(st[0])-1];
                 glm::vec2 uv = uvs[std::stoi(st[1])-1];
+                glm::vec3 n = normals[std::stoi(st[2])-1];
                 vert.postion[0] = vt.x;
                 vert.postion[1] = vt.y;
                 vert.postion[2] = vt.z;
                 vert.uv[0] = uv.x;
                 vert.uv[1] = uv.y;
+                vert.normal[0] = n.x;
+                vert.normal[1] = n.y;
+                vert.normal[2] = n.z;
                 fdata[strs[0]] = vertices.size();
                 vertices.push_back(vert);
             }
@@ -137,11 +147,15 @@ Mesh::Mesh(const char *path)
                 Mesh_Vertex vert;
                 glm::vec3 vt = verts[std::stoi(st[0])-1];
                 glm::vec2 uv = uvs[std::stoi(st[1])-1];
+                glm::vec3 n = normals[std::stoi(st[2])-1];
                 vert.postion[0] = vt.x;
                 vert.postion[1] = vt.y;
                 vert.postion[2] = vt.z;
                 vert.uv[0] = uv.x;
                 vert.uv[1] = uv.y;
+                vert.normal[0] = n.x;
+                vert.normal[1] = n.y;
+                vert.normal[2] = n.z;
                 fdata[strs[1]] = vertices.size();
                 vertices.push_back(vert);
             }
@@ -150,11 +164,15 @@ Mesh::Mesh(const char *path)
                 Mesh_Vertex vert;
                 glm::vec3 vt = verts[std::stoi(st[0])-1];
                 glm::vec2 uv = uvs[std::stoi(st[1])-1];
+                glm::vec3 n = normals[std::stoi(st[2])-1];
                 vert.postion[0] = vt.x;
                 vert.postion[1] = vt.y;
                 vert.postion[2] = vt.z;
                 vert.uv[0] = uv.x;
                 vert.uv[1] = uv.y;
+                vert.normal[0] = n.x;
+                vert.normal[1] = n.y;
+                vert.normal[2] = n.z;
                 fdata[strs[2]] = vertices.size();
                 vertices.push_back(vert);
             }
@@ -165,14 +183,16 @@ Mesh::Mesh(const char *path)
             triangles.push_back(tri);
         }
     }
-
-    Init();
+    if(doInit){
+        Init();
+    }
 }
 
 void Mesh::Init()
 {
     aly.AddFloat(3);
     aly.AddFloat(2);
+    aly.AddFloat(3);
     va = new VertexArray(&aly);
     va->Bind();
     Setup();

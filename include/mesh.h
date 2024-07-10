@@ -14,6 +14,7 @@ struct Mesh_Vertex
     {
         float postion[3];
         float uv[2];
+        float normal[3];
     };
 
     struct Mesh_Triangle
@@ -34,7 +35,7 @@ private:
 public:
     Mesh(std::vector<Mesh_Vertex> verts, std::vector<Mesh_Triangle> triangle);
     Mesh(MeshPrimitive primitive);
-    Mesh(const char* path);
+    Mesh(const char *path, bool doInit);
     void Init();
     void Setup();
     void AddVertex(Mesh_Vertex vert);
@@ -48,6 +49,13 @@ public:
     /// @param shader 
     void Draw(Renderer *render, Shader *shader);
     void Draw(Renderer *render, Shader *shader, int count);
+    inline std::vector<Mesh_Vertex> GetVertices(){
+        return vertices;
+    };
+    inline std::vector<Mesh_Triangle> SetTriangles(){
+        return triangles;
+    };
+
     ~Mesh();
     
 public:
