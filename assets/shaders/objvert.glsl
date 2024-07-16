@@ -5,9 +5,7 @@ in vec3 Normal;
 out vec3 apos;
 out vec2 TexCoord;
 out vec3 vnormal;
-layout (binding = 3) readonly buffer ModelMatrices {
-    mat4 umodel[];
-};
+uniform mat4 umodel;
 uniform float deltatime;
 uniform float time;
 uniform float freq;
@@ -31,8 +29,8 @@ float absfloat(float f){
 void main()
 {
     TexCoord = texCoord;
-    vnormal = (umodel[gl_InstanceID] * vec4(Normal, 1.0)).xyz;
-    vec4 position = umodel[gl_InstanceID] * vec4(aPos, 1.0);
+    vnormal = (umodel * vec4(Normal, 1.0)).xyz;
+    vec4 position = umodel * vec4(aPos, 1.0);
     apos = position.xyz;
     gl_Position = uprojection * uview * (position);
 }

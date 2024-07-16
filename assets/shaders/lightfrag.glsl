@@ -1,6 +1,6 @@
 #version 430
 out vec4 FragColor;
-uniform vec3 lightcolor = vec3(1.0, 1.0, 1.0);
+uniform vec3 lightcolor;
 
 void main()
 {

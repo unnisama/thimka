@@ -92,12 +92,10 @@ void Camera::Inputs(GLFWwindow *window, ImVec2 size, float dt)
 		{
 			return;
 		}
-
 		
 		auto currentmouse = glm::vec2(mouseX, mouseY);
 		auto diff = currentmouse - prevmouse;
 
-		
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
@@ -122,6 +120,9 @@ void Camera::Update()
 	for(Shader *shader : *shaders){
 		shader->Use();
 		shader->SetMat4f("uview", view);
+		if(shader->uniformStored.find("viewpos") != shader->uniformStored.end()){
+			shader->SetUniform3f("viewpos", Position.x, Position.y, Position.z);
+		}
 	}
 }
 

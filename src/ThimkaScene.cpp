@@ -72,7 +72,7 @@ ThimkaScene::ThimkaScene(GLFWwindow *window, Gui* gui, std::string assetspath) :
     glfwGetWindowSize(window, &width, &height);
     camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 0.0f), 45.0f, 0.01f, 1000.0f, &shaders);
 
-    plane = new Mesh((assetspath+"/objs/sword.obj").data(), true);
+    plane = new Mesh((assetspath+"/objs/plane.obj").data(), true);
 
     light = new Mesh((assetspath+"/objs/cube.obj").data(), true);
 
@@ -115,7 +115,7 @@ void ThimkaScene::onGui(float dt)
         shader->Use();
         shader->SetUniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
     }
-    if(ImGui::ColorPicker3("Light Color", glm::value_ptr(lightcolor))){
+    if(ImGui::ColorEdit3("Light Color", glm::value_ptr(lightcolor))){
         shader1->Use();
         shader1->SetUniform3f("lightcolor", lightcolor.r, lightcolor.g, lightcolor.b);
         shader->Use();
@@ -132,7 +132,9 @@ ThimkaScene *ThimkaScene::create(GLFWwindow *window, Gui *gui, std::string asset
 void ThimkaScene::End()
 {
     delete texture;
+    delete texture1;
     delete sb;
     delete shader;
+    delete shader1;
     delete plane;
 }

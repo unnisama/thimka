@@ -34,4 +34,5 @@ void Scene::Run(float dt)
 
 Scene::~Scene()
 {
+    
 }

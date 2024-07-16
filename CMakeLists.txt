@@ -21,6 +21,7 @@ set(
     src/storagebuffer.cpp
     src/scene.cpp
     src/ThimkaScene.cpp
+    src/JUScene.cpp
     src/App.cpp
 
 #   stb

@@ -9,6 +9,7 @@ Texture::Texture(const char *path, unsigned int slot)
         printf("Couldn't load %s\n", path);
         exit(-1);
     }
+    slotid = slot;
     // Generating ID
     GLDEBUGCALL(glGenTextures(1, &m_ID));
 
@@ -26,8 +27,6 @@ Texture::Texture(const char *path, unsigned int slot)
 
     // storing on vram
     GLDEBUGCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
-
-    GLDEBUGCALL(glGenerateMipmap(GL_TEXTURE_2D));
 
     GLDEBUGCALL(glBindTexture(GL_TEXTURE_2D, 0));
 

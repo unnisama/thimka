@@ -9,6 +9,7 @@ uniform int height = 0;
 uniform int radius = 5;
 uniform vec3 lightPos;
 uniform vec3 lightcolor;
+uniform vec3 viewpos;
 in vec3 apos;
 in vec2 TexCoord;
 in vec3 vnormal;
@@ -77,11 +78,31 @@ int isInRange(vec4 v, float r, vec4 vc){
 
 void main()
 {
-    float ambient = 0.20;
-    vec3 lightdir = normalize(lightPos - apos);
-    float diffuse = max(0.0, dot(normalize(vnormal), lightdir));
-    float normal = max(0.0, dot(texture(u_normal, TexCoord).xyz, lightdir));
+    vec3 objectColor = texture(u_texture, TexCoord).rgb;
+    vec4 normalMapColor = texture(u_normal, TexCoord);
 
-    vec4 color1 = texture(u_texture, TexCoord);
-    FragColor = vec4(color1.rgb * lightcolor * (diffuse+ambient) * normal, color1.a);
+
+    vec3 lightDir = normalize(lightPos - apos);
+    vec3 viewDir = normalize(viewpos - apos);
+    vec3 reflectDir = reflect(-lightDir, normalize(vnormal));
+
+    float normal = max(0.0, dot(texture(u_normal, TexCoord).xyz, lightDir));
+
+    float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightcolor;
+
+
+    float diff = max(dot(vnormal, lightDir), 0.0);
+    vec3 diffuse = diff * lightcolor;
+
+
+    float specularStrength = 0.3;
+    float shininess = 32.0;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    vec3 specular = specularStrength * spec * lightcolor;
+
+
+    vec3 result = (ambient + diffuse + specular) * objectColor * normal;
+    FragColor = vec4(result, 1.0);
+
 }

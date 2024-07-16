@@ -101,6 +101,7 @@ Mesh::Mesh(const char *path, bool doInit)
     std::map<std::string, int> fdata;
     std::ifstream f(path);
     if(!f.good()){
+        printf("File not good!\n");
         exit(-1);
     }
 

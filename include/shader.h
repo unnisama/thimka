@@ -16,7 +16,6 @@ private:
     unsigned int fs;
     unsigned int program;
     bool status;
-    std::unordered_map<const char *, GLuint> uniformStored;
 public:
     Shader(const char *fragpath, const char *vertpath);
     void Delete();
@@ -34,4 +33,6 @@ public:
     static std::string readFile(const char *path);
     bool GetStatus();
     void Use();
+public:
+    std::unordered_map<const char *, GLuint> uniformStored;
 };
