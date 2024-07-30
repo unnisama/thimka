@@ -3,7 +3,7 @@
 App::App(int WIDTH, int HEIGHT, const char *title, std::string assetspath)
 {
     game = new Game(WIDTH, HEIGHT, title);
-    gui = new Gui(Game::GetWindow(), game);
+    gui = new Gui(Game::GetWindow(), game, assetspath);
     this->assetspath = assetspath;
 }
 

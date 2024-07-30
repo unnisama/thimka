@@ -14,9 +14,10 @@ private:
     Game *game;
 
 public:
-    Gui(GLFWwindow *window, Game *game);
+    Gui(GLFWwindow *window, Game *game, std::string assetspath);
     void NewFrame();
     void EndFrame();
     ImGuiIO *GetIO();
+    Game* GetGame();
     ~Gui();
 };

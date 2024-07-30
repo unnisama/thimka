@@ -21,6 +21,7 @@ Camera::Camera(int width, int height, glm::vec3 position, float FOVdeg, float ne
 		shader->Use();
 		shader->SetMat4f("uview", view);
 		shader->SetMat4f("uprojection", projection);
+		shader->SetUniform3f("viewpos", Position.x, Position.y, Position.z);
 	}
 
 	AddResizeCallback([this](int width, int height){
@@ -63,11 +64,18 @@ void Camera::Inputs(GLFWwindow *window, ImVec2 size, float dt)
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		speed = hspeed;
+		if(wasShiftPressed == false){
+			speed = speed * hspeed;
+			wasShiftPressed = true;
+		}
+		
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = lspeed;
+		if(wasShiftPressed){
+			speed = speed/hspeed;
+			wasShiftPressed = false;
+		}
 	}
 
 	
@@ -149,4 +157,14 @@ void Camera::WindowResizeCallBack(int width, int height)
 		shader->Use();
 		shader->SetMat4f("uprojection", projection);
 	}
+}
+
+void Camera::SetSpeed(float speed)
+{
+	this->speed = speed;
+}
+
+float Camera::GetSpeed()
+{
+	return speed;
 }

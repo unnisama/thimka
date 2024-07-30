@@ -1,9 +1,9 @@
 #include "ThimkaScene.h"
 
-bool isEnabled(int x, int y, int z){
+inline bool isEnabled(int x, int y, int z){
     return true;
 }
-std::vector<glm::mat4> SetupData(float x, float y, float z){
+inline std::vector<glm::mat4> SetupData(float x, float y, float z){
     std::vector<glm::mat4> meshes;
     for (int i = 0; i < x; i++)
     {

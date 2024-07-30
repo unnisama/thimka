@@ -1,6 +1,6 @@
 #include "Gui.h"
 
-Gui::Gui(GLFWwindow *window, Game *game)
+Gui::Gui(GLFWwindow *window, Game *game, std::string assetspath)
 {
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
@@ -8,7 +8,7 @@ Gui::Gui(GLFWwindow *window, Game *game)
 
     ImGui_ImplOpenGL3_Init("#version 330");
     io = &ImGui::GetIO();
-    font = io->Fonts->AddFontFromFileTTF("/usr/share/fonts/TTF/JetBrainsMono-Medium.ttf", 16.0f);
+    font = io->Fonts->AddFontFromFileTTF((assetspath + "/fonts/JetBrainsMono-Medium.ttf").data(), 16.0f);
     ImGui::GetStyle().FrameRounding = 5.0f;
     ImGui::GetStyle().WindowRounding = 5.0f;
     this->game = game;
@@ -38,4 +38,9 @@ Gui::~Gui()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+}
+
+Game *Gui::GetGame()
+{
+    return game;
 }

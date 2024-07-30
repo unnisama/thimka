@@ -1,5 +1,12 @@
 #pragma once
 #include "scene.h"
+#include "storagebuffer.h"
+#include <random>
+#include "PerlineNoise.h"
+
+struct Mat4{
+    float data[16];
+};
 
 class JUScene : public Scene{
 private:
@@ -15,6 +22,8 @@ private:
     glm::vec3 lightcolor;
     Texture *texture;
     Texture *normal;
+    StorageBuffer *sb;
+    std::vector<Mat4> meshes;
 public:
     JUScene(GLFWwindow *window, Gui* gui, std::string assetspath);
     void Update(float dt);
@@ -22,4 +31,5 @@ public:
     void onGui(float dt);
     static JUScene *create(GLFWwindow *window, Gui* gui, std::string assetspath);
     void End(); 
+    Camera *GetCamera();
 };

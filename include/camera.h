@@ -34,11 +34,13 @@ public:
 	int height;
 
 
-	const float hspeed = 1.0f;
+	const float hspeed = 1.5f;
 	const float lspeed = 0.5f;
 	// Adjust the speed of the camera and it's sensitivity when looking around
 	float speed = lspeed;
 	float sensitivity = 2.0f;
+
+	bool wasShiftPressed = false;
 
 
 	// Camera constructor to set up initial values
@@ -52,6 +54,10 @@ public:
 	void RotateXY(float rotx, float roty);
 
 	void WindowResizeCallBack(int width, int height);
+
+	void SetSpeed(float speed);
+
+	float GetSpeed();
 
 };
 #endif
