@@ -2,7 +2,8 @@
 
 ### Certainly very inefficient
 ### Demo
-[!Demo](https://img.youtube.com/vi/mTin1ixkp80/0.jpg)
+https://youtu.be/mTin1ixkp80
+https://youtu.be/i_3fX9DgFYU
 
 Required Packages
 - glfw
